@@ -20,14 +20,25 @@ const getProduct = async (id) => {
     return result;
 }
 
-const addProduct = async (name, age) => {
-    const [product] = await pool.query(`INSERT INTO product (name, age) VALUES (?, ?)`, [name, age]);
-    return getProduct(product.insertid);
+const addProduct = async (productName, productDes, productPrice, productIMG, productQuan) => {
+
+    const [product] = await pool.query(`INSERT INTO product (productName, productDes, productPrice, productIMG, productQuan) VALUES (?, ?, ?, ?, ?)`, [ productName, productDes, productPrice, productIMG, productQuan]);
+    return getProduct(product.insertId);
 }
 
-const upProduct = async (name, age, id) => {
-    const [product] = await pool.query(`UPDATE product SET name = ?, age = ? WHERE id = ?`, [name, age, id]);
+const upProduct = async (productName, productDes, productPrice, productIMG, productQuan, id) => {
+    const [product] = await pool.query(`UPDATE product SET productName = ?, productDes = ?, productPrice =?, productIMG = ?, productQuan = ?  WHERE id = ?`, [productName, productDes, productPrice, productIMG, productQuan, id]);
     return product;
 }
 
-export { getProducts, getProduct, addProduct, upProduct };
+
+const deleteProduct = async (id) => {
+    const products = await getProducts();
+    const updatedProducts = products.filter(product => product.id !== id);
+    if (updatedProducts.length === products.length) {
+        throw new Error(`Product with id ${id} not found`);
+    }
+    return updatedProducts;
+};
+
+export { getProducts, getProduct, addProduct, upProduct, deleteProduct};

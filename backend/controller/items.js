@@ -1,41 +1,45 @@
-import {getProducts, getProduct, addProduct, upProduct} from '../models/database.js';
+import { getProducts, getProduct, addProduct, upProduct, deleteProduct } from '../models/database.js';
+
 
 export default {
-
-    getMany: async(req,res)=>{
+    getMany: async (req, res) => {
         res.send(await getProducts());
-        },
-
-
-    postMany: async(req,res)=>{
-        const {name, des, price, quan } = req.body
-        const post = await addProduct(name, des, price, quan)
-        res.send(await getProducts())
     },
-   getFew: async(req,res)=>{
-    const id = +req.params.id
-    const item = await getProduct(id)
-    res.send(item);
-   },
-    deleteMany: async(req,res)=>{
-        async(req, res) => {
-            const id = +req.params.id
-            const products = await getProducts()
-            const index = products.findIndex(f => f.id === id);
-            products.splice(index, 1);
-            res.send(products)
+
+    postMany: async (req, res) => {
+        const { productName, productDes, productPrice, productIMG, productQuan } = req.body;
+        await addProduct(productName, productDes, productPrice, productIMG, productQuan);
+        res.send(await getProducts());
+    },
+
+    getFew: async (req, res) => {
+        const id = +req.params.id;
+        const item = await getProduct(id);
+        res.send(item);
+    },
+
+    deleteMany: async (req, res) => {
+        const id = +req.params.id;
+        try {
+            const updatedProducts = await deleteProduct(id);
+            res.json(updatedProducts);
+        } catch (error) {
+            res.status(404).json({ message: error.message });
         }
     },
-    patchMany: async (req, res) =>{
 
-        const [product] = await getProduct(+req.params.id)
-        let {name, age} = req.body
-        name ? name=name: {name} = product
-        age ? age=age: {age} = product
-        console.log(product);
-        await upProduct(name, age, +req.params.id)
-        res.json(await getProducts())
+    patchMany: async (req, res) => {
+        const id = +req.params.id;
+        const product = await getProduct(id);
+        const { productName, productDes, productPrice, productIMG, productQuan } = req.body;
+        
+        const updatedProductName = productName || product.productName;
+        const updatedProductDes = productDes || product.productDes;
+        const updatedProductPrice = productPrice || product.productPrice;
+        const updatedProductIMG = productIMG || product.productIMG;
+        const updatedProductQuan = productQuan || product.productQuan;
+
+        await upProduct(updatedProductName, updatedProductDes, updatedProductPrice, updatedProductIMG, updatedProductQuan, id);
+        res.json(await getProducts());
     }
-    
-}
-
+};
