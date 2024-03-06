@@ -16,7 +16,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="product in $store.state.product" :key="product.id">
+            <tr v-for="product in product" :key="product.id">
               <td>{{ product.id }}</td>
               <td>{{ product.productQuan }}</td>
               <td>{{ product.productName }}</td>
@@ -25,8 +25,8 @@
               
               <td><img :src="product.jewelImage" alt="Product Image" style="width: 100px; height: auto;"></td>
               <td>
-                <button @click="openModal('edit', product.jewelID)">Edit</button>
-                <button @click="openModal('delete', product.jewelID)">Delete</button>
+                <button @click="openModal('edit', product.id)">Edit</button>
+                <button @click="openModal('delete', product.id)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -51,7 +51,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="people in $store.state.users" :key="people.userID">
+            <tr v-for="people in users" :key="people.userID">
               <td>{{ people.userID }}</td>
               <td>{{ people.firstName }}</td>
               <td>{{ people.lastName }}</td>
