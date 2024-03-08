@@ -1,10 +1,11 @@
-import { getProducts, getProduct, addProduct, upProduct, deleteProduct } from '../models/database.js';
+import { getProducts, getProduct, addProduct, upProduct, deleteProduct} from '../models/database.js';
 
 
 export default {
     getMany: async (req, res) => {
         res.send(await getProducts());
     },
+   
 
     postMany: async (req, res) => {
         const { productName, productDes, productPrice, productIMG, productQuan } = req.body;
@@ -12,12 +13,15 @@ export default {
         res.send(await getProducts());
     },
 
+    
+
     getFew: async (req, res) => {
         const id = +req.params.id;
         const item = await getProduct(id);
         res.send(item);
     },
 
+   
     deleteMany: async (req, res) => {
         const id = +req.params.id;
         try {
@@ -27,6 +31,8 @@ export default {
             res.status(404).json({ message: error.message });
         }
     },
+
+    
 
     patchMany: async (req, res) => {
         const id = +req.params.id;
@@ -42,4 +48,5 @@ export default {
         await upProduct(updatedProductName, updatedProductDes, updatedProductPrice, updatedProductIMG, updatedProductQuan, id);
         res.json(await getProducts());
     }
+
 };
